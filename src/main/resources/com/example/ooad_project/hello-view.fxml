@@ -10,104 +10,68 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ooad_project.GardenUIController">
-    <!-- Main UI Layout -->
-    <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="1187.0">
-        <children>
-            <!-- VBox for centering the GridPane -->
-            <VBox alignment="CENTER" prefHeight="641.0" prefWidth="1187.0" spacing="10" >
-                <HBox alignment="CENTER" spacing="10">
-                    <GridPane fx:id="gridPane" gridLinesVisible="true"
-                              style=" -fx-background-color: rgba(144, 238, 144, 0.5);">
-                        <!-- Column and Row constraints will be added dynamically in the controller -->
-                    </GridPane>
-                </HBox>
-            </VBox>
-
-            <!-- VBox for the day label at the top left -->
-            <VBox alignment="TOP_LEFT" prefWidth="1187.0" spacing="5" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="10.0">
-                <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Text layoutX="0" layoutY="0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="1.0">
-                        <font>
-                            <Font name="System Italic" size="16.0" />
-                        </font>
-                    </Text>
-                    <Label fx:id="currentDay" text="0">
-                        <font>
-                            <Font name="System Bold Italic" size="16.0" />
-                        </font>
-                    </Label>
-                </HBox>
-            </VBox>
-
-            <Text layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ACTIONS" wrappingWidth="102.3662109375" AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                <font>
-                    <Font name="System Bold" size="18.0" />
-                </font>
-            </Text>
-            <VBox layoutY="266.0" spacing="20" AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                <MenuButton
-                        fx:id="treeMenuButton"
-                        mnemonicParsing="false"
-                        prefHeight="50.0"
-                        prefWidth="200.0"
-                        text="Add Tree"
-                        textAlignment="CENTER"
-                        textFill="#056b25"
-                        style="-fx-font-size: 16px; -fx-padding: 5px" >
-
-                </MenuButton>
-
-
-                <MenuButton
-                        fx:id="flowerMenuButton"
-                        mnemonicParsing="false"
-                        prefHeight="50.0"
-                        prefWidth="200.0"
-                        text="Add Flower"
-                        textAlignment="CENTER"
-                        textFill="#ae5cad"
-                        style="-fx-font-size: 16px; -fx-padding: 5px"
-                />
-
-                <MenuButton
-                        fx:id="vegetableMenuButton"
-                        mnemonicParsing="false"
-                        prefHeight="50.0"
-                        prefWidth="200.0"
-                        text="Add Vegetable"
-                        textFill="#24ab4a"
-                        style="-fx-font-size: 16px; -fx-padding: 5px" />
-            </VBox>
-
-            <VBox layoutY="50.0" spacing="5" AnchorPane.leftAnchor="0.0">
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="WEATHER">
+    <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                prefHeight="641.0" prefWidth="1187.0" style="-fx-background-color: black;">
+        <VBox layoutY="50.0" spacing="50" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <HBox alignment="CENTER_LEFT" spacing="5">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="" fill="white">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="16.0"/>
                     </font>
                 </Text>
-                <Label fx:id="rainStatusLabel" text="Sunny" style="-fx-font-family: serif; -fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: black;"/>
-            </VBox>
-
-            <VBox layoutY="343.0" spacing="5" AnchorPane.leftAnchor="20.0">
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TEMPERATURE">
+                <Label fx:id="currentDay" text="0" textFill="white">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold Italic" size="24.0"/>
+                    </font>
+                </Label>
+            </HBox>
+            <VBox spacing="5">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="WEATHER" fill="white">
+                    <font>
+                        <Font name="System Bold" size="14.0"/>
                     </font>
                 </Text>
-                <Label fx:id="temperatureStatusLabel" text="Optimal" style="-fx-font-family: serif; -fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                <Label fx:id="rainStatusLabel" text="Sunny" textFill="white"
+                       style="-fx-font-family: serif; -fx-font-size: 25px; -fx-font-weight: bold;"/>
             </VBox>
-
-            <VBox layoutY="550.0" spacing="5" AnchorPane.leftAnchor="20.0">
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PARASITE">
+            <VBox spacing="5">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TEMPERATURE" fill="white">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="14.0"/>
                     </font>
                 </Text>
-                <Label fx:id="parasiteStatusLabel" text="No Parasites" style="-fx-font-family: serif; -fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                <Label fx:id="temperatureStatusLabel" text="Optimal" textFill="white"
+                       style="-fx-font-family: serif; -fx-font-size: 25px; -fx-font-weight: bold;"/>
             </VBox>
-        </children>
+            <VBox spacing="5">
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PARASITE" fill="white">
+                    <font>
+                        <Font name="System Bold" size="14.0"/>
+                    </font>
+                </Text>
+                <Label fx:id="parasiteStatusLabel" text="No Parasites" textFill="white"
+                       style="-fx-font-family: serif; -fx-font-size: 25px; -fx-font-weight: bold;"/>
+            </VBox>
+        </VBox>
+
+        <VBox alignment="CENTER" prefHeight="641.0" prefWidth="1187.0" spacing="10">
+            <HBox alignment="CENTER" spacing="20">
+                <GridPane fx:id="gridPane"
+                          style=" -fx-background-color: rgba(144, 238, 144, 0);">
+                </GridPane>
+            </HBox>
+        </VBox>
+
+        <VBox alignment="TOP_RIGHT" spacing="10" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <MenuButton fx:id="treeMenuButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0"
+                        text="Root Plants" textAlignment="CENTER" textFill="#056b25"
+                        style="-fx-font-size: 16px; -fx-padding: 5px"/>
+            <MenuButton fx:id="flowerMenuButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0"
+                        text="Fruits" textAlignment="CENTER" textFill="#ae5cad"
+                        style="-fx-font-size: 16px; -fx-padding: 5px"/>
+            <MenuButton fx:id="vegetableMenuButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0"
+                        text="Leafy Plants" textFill="#24ab4a" style="-fx-font-size: 16px; -fx-padding: 5px"/>
+        </VBox>
     </AnchorPane>
 </StackPane>

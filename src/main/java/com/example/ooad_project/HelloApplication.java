@@ -30,7 +30,6 @@ public class HelloApplication extends Application {
         stage.setTitle("OOAD - Project!");
         stage.setScene(scene) ;
         stage.show();
-
         initializeBackgroundServices();
         // Schedule API rain calls using JavaFX Timeline
         runAPIScheduledTasks();
@@ -49,7 +48,7 @@ public class HelloApplication extends Application {
     }
 
 
-//    This is for testing the API
+    //    This is for testing the API
 //    I assume Prof is going to do something similar
     private void runAPIScheduledTasks() {
         GardenSimulationAPI api = new GardenSimulationAPI();

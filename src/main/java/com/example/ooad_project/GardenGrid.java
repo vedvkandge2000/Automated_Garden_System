@@ -9,8 +9,8 @@ public class GardenGrid {
     private static GardenGrid instance = null;
     private Plant[][] plantGrid;
 
-    private final int numRows = 5;
-    private final int numCols = 7;
+    private final int numRows = 4;
+    private final int numCols = 8;
 
 
     private GardenGrid() {
@@ -25,7 +25,7 @@ public class GardenGrid {
     }
 
 
-//    Singleton pattern
+    //    Singleton pattern
     public static GardenGrid getInstance() {
         if (instance == null) {
             instance = new GardenGrid();
@@ -34,7 +34,7 @@ public class GardenGrid {
     }
 
 
-//    Just prints the grid to the console
+    //    Just prints the grid to the console
 //    If possible we need to make it better
 //    For testing.
     public void printGrid() {
@@ -77,7 +77,7 @@ public class GardenGrid {
         }
     }
 
-//    It is important that we synchronize this method
+    //    It is important that we synchronize this method
 //    Because we are accessing the grid via multiple threadsg
     public synchronized Plant getPlant(int row, int col) {
         if (row >= 0 && row < getNumRows() && col >= 0 && col < getNumCols()) {

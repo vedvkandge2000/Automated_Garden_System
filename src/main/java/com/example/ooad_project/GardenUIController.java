@@ -101,18 +101,18 @@ public class GardenUIController {
     private final Random random = new Random();
     private GardenGrid gardenGrid;
 
-//    This is the plant manager that will be used to get the plant data
+    //    This is the plant manager that will be used to get the plant data
 //    from the JSON file, used to populate the menu buttons
     private PlantManager plantManager = PlantManager.getInstance();
 
-//    Same as above but for the parasites
+    //    Same as above but for the parasites
     private ParasiteManager parasiteManager = ParasiteManager.getInstance();
 
     public GardenUIController() {
         gardenGrid = GardenGrid.getInstance();
     }
 
-//    This is the method that will print the grid
+    //    This is the method that will print the grid
     @FXML
     public void printGrid(){
         gardenGrid.printGrid();
@@ -138,14 +138,12 @@ public class GardenUIController {
     }
 
 
-//    This is the UI Logger for the GardenUIController
+    //    This is the UI Logger for the GardenUIController
 //    This is used to log events that happen in the UI
     private Logger log4jLogger = LogManager.getLogger("GardenUIControllerLogger");
 
     @FXML
     public void initialize() {
-
-        initializeLogger();
 
         showSunnyWeather();
 
@@ -156,7 +154,7 @@ public class GardenUIController {
 //
 //         Load the background image
 //         Load the background image
-        Image backgroundImage = new Image(getClass().getResourceAsStream("/images/backgroundImage.jpg"));
+        Image backgroundImage = new Image(getClass().getResourceAsStream("/images/backgroundImage1.png"));
 
 
 
@@ -178,29 +176,30 @@ public class GardenUIController {
         // Add ColumnConstraints
         for (int col = 0; col < gardenGrid.getNumCols(); col++) {
             ColumnConstraints colConst = new ColumnConstraints();
-            colConst.setPrefWidth(80); // Adjust the width as needed
+            colConst.setPrefWidth(83); // Adjust the width as needed
             gridPane.getColumnConstraints().add(colConst);
         }
 
         // Add RowConstraints
         for (int row = 0; row < gardenGrid.getNumRows(); row++) {
             RowConstraints rowConst = new RowConstraints();
-            rowConst.setPrefHeight(80); // Adjust the height as needed
+            rowConst.setPrefHeight(93); // Adjust the height as needed
             gridPane.getRowConstraints().add(rowConst);
         }
 
         createColoredGrid(gridPane, gardenGrid.getNumRows(),gardenGrid.getNumCols());
 
         // Initialize the rain canvas and animation
-        rainCanvas = new Canvas(1000, 800);
+        rainCanvas = new Canvas(1000, 600);
+        rainCanvas.setTranslateX(50);
         anchorPane.getChildren().add(rainCanvas); // Add the canvas to the AnchorPane
         rainDrops = new ArrayList<>();
 
-        //gridPane.setStyle("-fx-grid-lines-visible: true; -fx-border-color: brown; -fx-border-width: 2;");
-
         // Load plants data from JSON file and populate MenuButtons
+        vegetableMenuButton.setText("Vegetable"); // Updated Name
+        treeMenuButton.setText("Trees");
+        flowerMenuButton.setText("Flowers");
         loadPlantsData();
-//        loadParasitesData();
 
         log4jLogger.info("GardenUIController initialized");
 
@@ -308,7 +307,7 @@ public class GardenUIController {
                 cell.setPrefSize(cellWidth, cellHeight);
 
                 // Set a unique border color for each cell
-                Color borderColor = Color.BROWN; // Function to generate random colors
+                Color borderColor = Color.TRANSPARENT; // Function to generate random colors
                 cell.setBorder(new Border(new BorderStroke(
                         borderColor,
                         BorderStrokeStyle.SOLID,
@@ -368,46 +367,49 @@ public class GardenUIController {
         String imageFile = plant.getCurrentImage();
         Image image = new Image(getClass().getResourceAsStream("/images/" + imageFile));
         ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(40); // Fit the cell size
-        imageView.setFitWidth(40);
+        imageView.setFitHeight(65); // Fit the cell size
+        imageView.setFitWidth(65);
 
         StackPane pane = new StackPane(imageView);
         pane.setStyle("-fx-alignment: center;"); // Center the image in the pane
         gridPane.add(pane, col, row); // Add the pane to the grid
-        GridPane.setHalignment(pane, HPos.CENTER); // Center align in grid cell
-        GridPane.setValignment(pane, VPos.CENTER);
+        GridPane.setHalignment(pane, HPos.LEFT); // Center align in grid cell
+        GridPane.setValignment(pane, VPos.TOP);
     }
 
-//    Function that is called when the parasite damage event is published
-private void handleParasiteDamageEvent(ParasiteDamageEvent event) {
-
+    //    Function that is called when the parasite damage event is published
+    private void handleParasiteDamageEvent(ParasiteDamageEvent event) {
         logger.info("Day: " + logDay + " Displayed plant damaged at row " + event.getRow() + " and column " + event.getCol() + " by " + event.getDamage());
 
-    Platform.runLater(() -> {
-        int row = event.getRow();
-        int col = event.getCol();
-        int damage = event.getDamage();
+        Platform.runLater(() -> {
+            int row = event.getRow();
+            int col = event.getCol();
+            int damage = event.getDamage();
 
-        // Create a label with the damage value prefixed by a minus sign
-        Label damageLabel = new Label("-" + String.valueOf(damage));
-        damageLabel.setTextFill(javafx.scene.paint.Color.RED);
-        damageLabel.setStyle("-fx-font-weight: bold;");
+            // Create a label with the damage value prefixed by a minus sign
+            Label damageLabel = new Label("-" + damage);
+            damageLabel.setTextFill(Color.RED);
+            damageLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
-        // Set the label's position in the grid
-        GridPane.setRowIndex(damageLabel, row);
-        GridPane.setColumnIndex(damageLabel, col);
-        GridPane.setHalignment(damageLabel, HPos.RIGHT);  // Align to right
-        GridPane.setValignment(damageLabel, VPos.TOP);    // Align to top
-        gridPane.getChildren().add(damageLabel);
+            // Create a white circular background
+            Circle backgroundCircle = new Circle(15, Color.WHITE);
+            backgroundCircle.setStroke(Color.BLACK);
 
-        // Remove the label after a pause
-        PauseTransition pause = new PauseTransition(Duration.seconds(5)); // Set duration to 5 seconds
-        pause.setOnFinished(_ -> gridPane.getChildren().remove(damageLabel));
-        pause.play();
-    });
-}
+            // Wrap label and background in a StackPane for alignment
+            StackPane damagePane = new StackPane(backgroundCircle, damageLabel);
+            damagePane.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
+            // Add damagePane to the grid
+            gridPane.add(damagePane, col, row);
+            GridPane.setHalignment(damagePane, HPos.RIGHT);  // Align to lower right corner
+            GridPane.setValignment(damagePane, VPos.BOTTOM);
 
+            // Remove the label after a pause
+            PauseTransition pause = new PauseTransition(Duration.seconds(5)); // Set duration to 5 seconds
+            pause.setOnFinished(_ -> gridPane.getChildren().remove(damagePane));
+            pause.play();
+        });
+    }
     private void handleTemperatureHeatEvent(TemperatureHeatEvent event) {
 
         logger.info("Day: " + logDay + " Displayed plant heated at row " + event.getRow() + " and column " + event.getCol() + " by " + event.getTempDiff());
@@ -416,11 +418,11 @@ private void handleParasiteDamageEvent(ParasiteDamageEvent event) {
             int row = event.getRow();
             int col = event.getCol();
 
-            String imageName = "heat.png"; // Update this to your heat image name
+            String imageName = "heated.png"; // Update this to your heat image name
             Image heatImage = new Image(getClass().getResourceAsStream("/images/" + imageName));
             ImageView heatImageView = new ImageView(heatImage);
-            heatImageView.setFitHeight(20);  // Match the cell size in the grid
-            heatImageView.setFitWidth(20);
+            heatImageView.setFitHeight(40);  // Match the cell size in the grid
+            heatImageView.setFitWidth(40);
 
             GridPane.setRowIndex(heatImageView, row);
             GridPane.setColumnIndex(heatImageView, col);
@@ -446,7 +448,7 @@ private void handleParasiteDamageEvent(ParasiteDamageEvent event) {
             int row = event.getRow();
             int col = event.getCol();
 
-            String imageName = "cool.png"; // Update this to your cool image name
+            String imageName = "cooled.png"; // Update this to your cool image name
             Image coolImage = new Image(getClass().getResourceAsStream("/images/" + imageName));
             ImageView coolImageView = new ImageView(coolImage);
             coolImageView.setFitHeight(20);  // Match the cell size in the grid
@@ -463,67 +465,81 @@ private void handleParasiteDamageEvent(ParasiteDamageEvent event) {
             pause.play();
         });
     }
-//  Function that is called when the sprinkler event is published
-private void handleSprinklerEvent(SprinklerEvent event) {
+    //  Function that is called when the sprinkler event is published
+    private void handleSprinklerEvent(SprinklerEvent event) {
 
-    logger.info("Day: " + currentDay + " Displayed Sprinkler activated at row " + event.getRow() + " and column " + event.getCol() + " with water amount " + event.getWaterNeeded());
+        logger.info("Day: " + currentDay + " Displayed Sprinkler activated at row " + event.getRow() + " and column " + event.getCol() + " with water amount " + event.getWaterNeeded());
 
-    Platform.runLater(() -> {
-        int row = event.getRow();
-        int col = event.getCol();
+        Platform.runLater(() -> {
+            int row = event.getRow();
+            int col = event.getCol();
 
-        // Create a group to hold animated droplets
-        Group sprinklerAnimationGroup = new Group();
+            // Create a group to hold animated droplets
+            Group sprinklerAnimationGroup = new Group();
 
-        // Add multiple lines or droplets to simulate water spray
-        int numDroplets = 10; // Number of water droplets
-        double tileWidth = 40; // Width of the grid cell
-        double tileHeight = 40; // Height of the grid cell
+            // Add multiple lines or droplets to simulate water spray
+            int numDroplets = 10; // Number of water droplets
+            double tileWidth = 40; // Width of the grid cell
+            double tileHeight = 70; // Height of the grid cell
 
-        for (int i = 0; i < numDroplets; i++) {
-            // Calculate evenly spaced positions within the tile
-            double positionX = (i % Math.sqrt(numDroplets)) * (tileWidth / Math.sqrt(numDroplets));
-            double positionY = (i / Math.sqrt(numDroplets)) * (tileHeight / Math.sqrt(numDroplets));
+            for (int i = 0; i < numDroplets; i++) {
+                // Calculate evenly spaced positions within the tile
+                double positionX = (i % Math.sqrt(numDroplets)) * (tileWidth / Math.sqrt(numDroplets));
+                double positionY = (i / Math.sqrt(numDroplets)) * (tileHeight / Math.sqrt(numDroplets));
 
-            Circle droplet = new Circle();
-            droplet.setRadius(3); // Radius of the droplet
-            droplet.setFill(Color.BLUE); // Color of the droplet
+                Circle droplet = new Circle();
+                droplet.setRadius(3); // Radius of the droplet
+                droplet.setFill(Color.BLUE); // Color of the droplet
 
-            // Set starting position for the droplet
-            droplet.setCenterX(positionX);
-            droplet.setCenterY(positionY);
+                // Set starting position for the droplet
+                droplet.setCenterX(positionX);
+                droplet.setCenterY(positionY);
 
-            // Create a transition for each droplet
-            TranslateTransition transition = new TranslateTransition();
-            transition.setNode(droplet);
-            transition.setDuration(Duration.seconds(0.9)); // Droplet animation duration
-            transition.setByX(Math.random() * 20 - 2.5); // Small random spread on X-axis
-            transition.setByY(Math.random() * 20);      // Small downward spread on Y-axis
-            transition.setCycleCount(1);
-            // Add to group and start animation
-            sprinklerAnimationGroup.getChildren().add(droplet);
-            transition.play();
-        }
+                // Create a transition for each droplet
+                TranslateTransition transition = new TranslateTransition();
+                transition.setNode(droplet);
+                transition.setDuration(Duration.seconds(0.9)); // Droplet animation duration
+                transition.setByX(Math.random() * 20 - 2.5); // Small random spread on X-axis
+                transition.setByY(Math.random() * 20);      // Small downward spread on Y-axis
+                transition.setCycleCount(1);
+                // Add to group and start animation
+                sprinklerAnimationGroup.getChildren().add(droplet);
+                transition.play();
+            }
 
-        // Add animation group to the grid cell
-        GridPane.setRowIndex(sprinklerAnimationGroup, row);
-        GridPane.setColumnIndex(sprinklerAnimationGroup, col);
-        gridPane.getChildren().add(sprinklerAnimationGroup);
+            // Add animation group to the grid cell
+            GridPane.setRowIndex(sprinklerAnimationGroup, row);
+            GridPane.setColumnIndex(sprinklerAnimationGroup, col);
+            gridPane.getChildren().add(sprinklerAnimationGroup);
 
-        // Remove animation after it completes
-        PauseTransition pause = new PauseTransition(Duration.seconds(3)); // Total duration for animation to persist
-        pause.setOnFinished(_ -> gridPane.getChildren().remove(sprinklerAnimationGroup));
-        pause.play();
-    });
-}
+            // Remove animation after it completes
+            PauseTransition pause = new PauseTransition(Duration.seconds(3)); // Total duration for animation to persist
+            pause.setOnFinished(_ -> gridPane.getChildren().remove(sprinklerAnimationGroup));
+            pause.play();
+
+            String imageNameCool = "cooled.png"; // Update this to your cool image name
+            Image coolImage = new Image(getClass().getResourceAsStream("/images/" + imageNameCool));
+            ImageView coolImageView = new ImageView(coolImage);
+            coolImageView.setFitHeight(20);  // Match the cell size in the grid
+            coolImageView.setFitWidth(20);
+
+            GridPane.setRowIndex(coolImageView, row);
+            GridPane.setColumnIndex(coolImageView, col);
+            GridPane.setHalignment(coolImageView, HPos.LEFT);  // Align to left
+            GridPane.setValignment(coolImageView, VPos.BOTTOM); // Align to top
+            gridPane.getChildren().add(coolImageView);
+
+            PauseTransition pauseCool = new PauseTransition(Duration.seconds(5)); // Set duration to 10 seconds
+            pauseCool.setOnFinished(_ -> gridPane.getChildren().remove(coolImageView));
+            pauseCool.play();
+        });
+
+
+    }
 
     private void initializeLogger() {
 //        LoggerAppender.setController(this);
     }
-
-//    public void appendLogText(String text) {
-//        Platform.runLater(() -> logTextArea.appendText(text + "\n"));
-//    }
 
     public void handleDayChangeEvent(DayChangeEvent event) {
 
@@ -536,26 +552,18 @@ private void handleSprinklerEvent(SprinklerEvent event) {
     }
 
     private void handlePlantImageUpdateEvent(PlantImageUpdateEvent event) {
-
         logger.info("Day: " + logDay + " Plant image updated at row " + event.getPlant().getRow() + " and column " + event.getPlant().getCol() + " to " + event.getPlant().getCurrentImage());
 
-//        Be sure to wrap the code in Platform.runLater() to update the UI
-//        This is because the event is being handled in a different thread
-//        and we need to update the UI in the JavaFX Application Thread
         Platform.runLater(() -> {
-
             Plant plant = event.getPlant();
-
-            // Calculate the grid position
             int row = plant.getRow();
             int col = plant.getCol();
 
-            // Find the ImageView for the plant in the grid and remove it
+            // Remove previous image from the grid
             gridPane.getChildren().removeIf(node -> {
-                if (GridPane.getRowIndex(node) != null && GridPane.getColumnIndex(node) != null) {
-                    return GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col && node instanceof ImageView;
-                }
-                return false;
+                Integer nodeRow = GridPane.getRowIndex(node);
+                Integer nodeCol = GridPane.getColumnIndex(node);
+                return nodeRow != null && nodeCol != null && nodeRow == row && nodeCol == col && node instanceof StackPane;
             });
 
             // Load the new image for the plant
@@ -566,104 +574,58 @@ private void handleSprinklerEvent(SprinklerEvent event) {
             newImageView.setFitWidth(40);
 
             // Create a pane to center the image
-            StackPane pane = new StackPane();
-            pane.getChildren().add(newImageView);
+            StackPane pane = new StackPane(newImageView);
             gridPane.add(pane, col, row);
+            GridPane.setColumnIndex(pane, col);
+            GridPane.setRowIndex(pane, row);
         });
     }
 
-
     private void handleDisplayParasiteEvent(DisplayParasiteEvent event) {
+        logger.info("Day: " + logDay + " Parasite displayed at row " + event.getRow() +
+                " and column " + event.getColumn() + " with name " + event.getParasite().getName());
 
-        logger.info("Day: " + logDay + " Parasite displayed at row " + event.getRow() + " and column " + event.getColumn() + " with name " + event.getParasite().getName());
-
-        // Load the image for the rat
-        String imageName = "/images/" + event.getParasite().getImageName();
-        Image ratImage = new Image(getClass().getResourceAsStream(imageName));
-        ImageView parasiteImageView = new ImageView(ratImage);
-
-//
-        parasiteImageView.setFitHeight(50);  // Match the cell size in the grid
-        parasiteImageView.setFitWidth(50);
-
-        // Use the row and column from the event
         int row = event.getRow();
         int col = event.getColumn();
 
-        // Place the rat image on the grid
-//        gridPane.add(parasiteImageView, col, row);
-//        System.out.println("Rat placed at row " + row + " and column " + col);
+        // Load and configure the parasite image
+        Image parasiteImage = new Image(getClass().getResourceAsStream("/images/" + event.getParasite().getImageName()));
+        ImageView parasiteImageView = new ImageView(parasiteImage);
+        parasiteImageView.setFitHeight(50);
+        parasiteImageView.setFitWidth(50);
 
+        // Create a StackPane to hold the parasite image
+        StackPane parasitePane = new StackPane(parasiteImageView);
+        gridPane.add(parasitePane, col, row);
+        GridPane.setHalignment(parasitePane, HPos.LEFT);
+        GridPane.setValignment(parasitePane, VPos.BOTTOM);
 
-        // Place the parasite image on the grid in the same cell but with offset
-        GridPane.setRowIndex(parasiteImageView, row);
-        GridPane.setColumnIndex(parasiteImageView, col);
-        GridPane.setHalignment(parasiteImageView, HPos.RIGHT);  // Align to right
-        GridPane.setValignment(parasiteImageView, VPos.BOTTOM); // Align to bottom
-        gridPane.getChildren().add(parasiteImageView);
-
-
-
-
-        // Create a pause transition of 5 seconds before removing the rat image
+        // Remove parasite after 3 seconds with pest control effect
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
-
-        String imagePestControlName = "/images/pControl.png";
-
-
         pause.setOnFinished(_ -> {
-            pestControl(imagePestControlName, row, col);
-            gridPane.getChildren().remove(parasiteImageView);  // Remove the rat image from the grid
-//            System.out.println("Rat removed from row " + row + " and column " + col);
-            //gridPane.getChildren().remove(pestControlImageView);
+            triggerPestControlEffect(row, col);
+            gridPane.getChildren().remove(parasitePane);
         });
-
         pause.play();
     }
 
-    private void pestControl(String imagePestControlName, int row, int col){
-        Image pestControlImage = new Image(getClass().getResourceAsStream(imagePestControlName));
+    private void triggerPestControlEffect(int row, int col) {
+        Image pestControlImage = new Image(getClass().getResourceAsStream("/images/pControl.png"));
         ImageView pestControlImageView = new ImageView(pestControlImage);
-
-//
-        pestControlImageView.setFitHeight(70);  // Match the cell size in the grid
+        pestControlImageView.setFitHeight(70);
         pestControlImageView.setFitWidth(70);
 
-        GridPane.setRowIndex(pestControlImageView, row);
-        GridPane.setColumnIndex(pestControlImageView, col);
-        GridPane.setHalignment(pestControlImageView, HPos.RIGHT);  // Align to right
-        GridPane.setValignment(pestControlImageView, VPos.BOTTOM); // Align to bottom
-        gridPane.getChildren().add(pestControlImageView);
+        StackPane pestControlPane = new StackPane(pestControlImageView);
+        gridPane.add(pestControlPane, col, row);
+        GridPane.setHalignment(pestControlPane, HPos.LEFT);
+        GridPane.setValignment(pestControlPane, VPos.BOTTOM);
 
+        // Remove pest control effect after 2 seconds
         PauseTransition pause = new PauseTransition(Duration.seconds(2));
-
-        pause.setOnFinished(_ -> {
-            gridPane.getChildren().remove(pestControlImageView);  // Remove the rat image from the grid
-//            System.out.println("Rat removed from row " + row + " and column " + col);
-            //gridPane.getChildren().remove(pestControlImageView);
-        });
-
+        pause.setOnFinished(_ -> gridPane.getChildren().remove(pestControlPane));
         pause.play();
     }
 
-
-//    private void loadParasitesData() {
-//        for (Parasite parasite : parasiteManager.getParasites()) {
-//            MenuItem menuItem = new MenuItem(parasite.getName());
-//            menuItem.setOnAction(e -> handleParasiteSelection(parasite));
-//            parasiteMenuButton.getItems().add(menuItem);
-//        }
-//    }
-
-    private void handleParasiteSelection(Parasite parasite) {
-        // Implement what happens when a parasite is selected
-        // For example, display details or apply effects to the garden
-//        System.out.println("Selected parasite: " + parasite.getName() + " with damage: " + parasite.getDamage());
-    }
-
-//
-    @FXML
-    public void showPestOnGrid() {}
 
 
     private void changeRainUI(RainEvent event) {
@@ -677,13 +639,12 @@ private void handleSprinklerEvent(SprinklerEvent event) {
 
         Platform.runLater(() -> {
             // Update UI to reflect it's raining
-//            System.out.println("Changing UI to reflect rain event");
 
             // Create an ImageView for the rain icon
             Image rainImage = new Image(getClass().getResourceAsStream("/images/rain.png"));
             ImageView rainImageView = new ImageView(rainImage);
-            rainImageView.setFitHeight(200);
-            rainImageView.setFitWidth(200);
+            rainImageView.setFitHeight(100);
+            rainImageView.setFitWidth(100);
 
             // Set the text with the rain amount
             rainStatusLabel.setGraphic(rainImageView);
@@ -712,8 +673,8 @@ private void handleSprinklerEvent(SprinklerEvent event) {
             // Create an ImageView for the sun icon
             Image sunImage = new Image(getClass().getResourceAsStream("/images/sun.png"));
             ImageView sunImageView = new ImageView(sunImage);
-            sunImageView.setFitHeight(200);
-            sunImageView.setFitWidth(200);
+            sunImageView.setFitHeight(100);
+            sunImageView.setFitWidth(100);
 
             // Set the text with the sun status
             rainStatusLabel.setGraphic(sunImageView);
@@ -811,7 +772,6 @@ private void handleSprinklerEvent(SprinklerEvent event) {
             pause.setOnFinished(e -> {
                 // Update UI to reflect no parasites after the event ends
                 showNoParasites();
-//                System.out.println("Parasite event ended, updating UI to show no parasites.");
             });
             pause.play();
         });
@@ -839,12 +799,6 @@ private void handleSprinklerEvent(SprinklerEvent event) {
 
         logger.info("Day: " + currentDay + " Loading plant data from JSON file");
 
-//        for (Flower flower : plantManager.getFlowers()) {
-//            MenuItem menuItem = new MenuItem(flower.getName());
-//            menuItem.setOnAction(e -> addPlantToGrid(flower.getName(), flower.getCurrentImage()));
-//            flowerMenuButton.getItems().add(menuItem);
-//        }
-
         for (Flower flower : plantManager.getFlowers()) {
             CustomMenuItem menuItem = createImageMenuItem(flower.getName(), flower.getCurrentImage());
             menuItem.setOnAction(e -> addPlantToGrid(flower.getName(), flower.getCurrentImage()));
@@ -853,23 +807,11 @@ private void handleSprinklerEvent(SprinklerEvent event) {
 
         logger.info("Day: " + currentDay + " Loading Tree");
 
-//        for (Tree tree : plantManager.getTrees()) {
-//            MenuItem menuItem = new MenuItem(tree.getName());
-//            menuItem.setOnAction(e -> addPlantToGrid(tree.getName(), tree.getCurrentImage()));
-//            treeMenuButton.getItems().add(menuItem);
-//        }
-
         for (Tree tree : plantManager.getTrees()) {
             CustomMenuItem menuItem = createImageMenuItem(tree.getName(), tree.getCurrentImage());
             menuItem.setOnAction(e -> addPlantToGrid(tree.getName(), tree.getCurrentImage()));
             treeMenuButton.getItems().add(menuItem);
         }
-
-//        for (Vegetable vegetable : plantManager.getVegetables()) {
-//            MenuItem menuItem = new MenuItem(vegetable.getName());
-//            menuItem.setOnAction(e -> addPlantToGrid(vegetable.getName(), vegetable.getCurrentImage()));
-//            vegetableMenuButton.getItems().add(menuItem);
-//        }
 
         logger.info("Day: " + currentDay + " Loading Vegetable");
 
@@ -898,7 +840,7 @@ private void handleSprinklerEvent(SprinklerEvent event) {
         ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/" + imagePath)));
         logger.info("6");
         imageView.setFitWidth(120); // Set width
-        imageView.setFitHeight(120); // Set height
+        imageView.setFitHeight(80); // Set height
 
         // Create a label for the text
         Label label = new Label(name);
@@ -935,8 +877,8 @@ private void handleSprinklerEvent(SprinklerEvent event) {
                 if (!gardenGrid.isSpotOccupied(row, col)) {
 
                     ImageView farmerView = new ImageView(new Image(getClass().getResourceAsStream("/images/farmer.png")));
-                    farmerView.setFitHeight(60);
-                    farmerView.setFitWidth(60);
+                    farmerView.setFitHeight(80);
+                    farmerView.setFitWidth(80);
 
                     // Create a pane to center the image
                     StackPane farmerPane = new StackPane();
@@ -947,7 +889,6 @@ private void handleSprinklerEvent(SprinklerEvent event) {
 
                     pause.setOnFinished(_ -> {
                         gridPane.getChildren().remove(farmerPane);  // Remove the rat image from the grid
-//            System.out.println("Rat removed from row " + row + " and column " + col);
                         //gridPane.getChildren().remove(pestControlImageView);
                     });
                     pause.play();
@@ -957,7 +898,6 @@ private void handleSprinklerEvent(SprinklerEvent event) {
                     farmerPause.setOnFinished(event -> {
                         // Code to execute after the 5-second pause
 //                    Need row and col for logging
-//                        System.out.println("Placing " + name + " at row " + row + " col " + col);
                         plant.setRow(row);
                         plant.setCol(col);
                         gardenGrid.addPlant(plant, row, col);
