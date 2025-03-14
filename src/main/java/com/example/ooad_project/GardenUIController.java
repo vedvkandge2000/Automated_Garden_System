@@ -159,12 +159,8 @@ public class GardenUIController {
         // Initialize icon containers with default icons
         initializeIconContainers();
 
-//
-//         Load the background image
-//         Load the background image
+        // Load the background image
         Image backgroundImage = new Image(getClass().getResourceAsStream("/images/backgroundImage1.png"));
-
-
 
         // Create an ImageView
         ImageView imageView = new ImageView(backgroundImage);
@@ -197,10 +193,15 @@ public class GardenUIController {
 
         createColoredGrid(gridPane, gardenGrid.getNumRows(),gardenGrid.getNumCols());
 
-        // Initialize the rain canvas and animation
-        rainCanvas = new Canvas(1000, 600);
-        rainCanvas.setTranslateX(50);
+        // Initialize the rain canvas and animation - position it over the garden grid only
+        rainCanvas = new Canvas(800, 600); // Initial size - will be adjusted dynamically
+        rainCanvas.setTranslateX(260); // Match the garden grid's left anchor
+        rainCanvas.setTranslateY(20);  // Approximate top position of the grid
         anchorPane.getChildren().add(rainCanvas); // Add the canvas to the AnchorPane
+        
+        // Make the canvas initially invisible
+        rainCanvas.setVisible(false);
+        
         rainDrops = new ArrayList<>();
 
         // Load plants data from JSON file and populate MenuButtons
@@ -306,14 +307,44 @@ public class GardenUIController {
 
     // Start rain animation
     private void startRainAnimation() {
+        // Make the canvas visible when animation starts
+        rainCanvas.setVisible(true);
+        
+        // Calculate the grid's actual dimensions
+        double gridWidth = gridPane.getWidth();
+        double gridHeight = gridPane.getHeight();
+        
+        // If grid dimensions are not yet available, use the number of rows/columns and cell size
+        if (gridWidth <= 0 || gridHeight <= 0) {
+            gridWidth = gardenGrid.getNumCols() * 83; // Using column constraint width
+            gridHeight = gardenGrid.getNumRows() * 93; // Using row constraint height
+        }
+        
+        // Ensure minimum dimensions and add some extra height to reach the bottom
+        gridWidth = Math.max(gridWidth, 500);
+        gridHeight = Math.max(gridHeight, 550);
+        
+        // Set canvas size to match the grid area with full height
+        rainCanvas.setWidth(gridWidth);
+        rainCanvas.setHeight(gridHeight);
+        
         GraphicsContext gc = rainCanvas.getGraphicsContext2D();
 
         // Create initial raindrops
-        for (int i = 0; i < 100; i++) {
-            rainDrops.add(new RainDrop(random.nextDouble() * anchorPane.getWidth(), random.nextDouble() * anchorPane.getHeight(), 2 + random.nextDouble() * 4));
+        rainDrops.clear(); // Clear any existing raindrops
+        for (int i = 0; i < 150; i++) { // Increased number of raindrops for better coverage
+            rainDrops.add(new RainDrop(
+                random.nextDouble() * rainCanvas.getWidth(), 
+                random.nextDouble() * rainCanvas.getHeight(), 
+                2 + random.nextDouble() * 4
+            ));
         }
 
         // Animation timer to update and draw raindrops
+        if (rainAnimation != null) {
+            rainAnimation.stop();
+        }
+        
         rainAnimation = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -323,37 +354,43 @@ public class GardenUIController {
         };
 
         rainAnimation.start();
-
     }
 
     // Update raindrop positions
     private void updateRainDrops() {
         for (RainDrop drop : rainDrops) {
             drop.y += drop.speed;
-            if (drop.y > anchorPane.getHeight()) {
-                drop.y = 0;
-                drop.x = random.nextDouble() * anchorPane.getWidth();
+            if (drop.y > rainCanvas.getHeight()) {
+                // Reset raindrop to top with random horizontal position
+                drop.y = -10 - random.nextDouble() * 20; // Start slightly above the canvas with variation
+                drop.x = random.nextDouble() * rainCanvas.getWidth();
             }
         }
     }
 
     // Draw raindrops on the canvas
     private void drawRain(GraphicsContext gc) {
-        gc.clearRect(0, 0, anchorPane.getWidth(), anchorPane.getHeight());
+        gc.clearRect(0, 0, rainCanvas.getWidth(), rainCanvas.getHeight());
         gc.setFill(Color.CYAN);
 
         for (RainDrop drop : rainDrops) {
-            gc.fillOval(drop.x, drop.y, 3, 15); // Raindrop shape (x, y, width, height)
+            // Draw slightly larger raindrops for better visibility
+            gc.fillOval(drop.x, drop.y, 2, 15); // Raindrop shape (x, y, width, height)
         }
     }
 
-    // Stop rain animation after 5 seconds
+    // Stop rain animation
     private void stopRainAfterFiveSeconds() {
         PauseTransition pauseRain = new PauseTransition(Duration.seconds(1));
         pauseRain.setOnFinished(event -> {
             // Clear the canvas and stop the animation
-            rainAnimation.stop();
-            rainCanvas.getGraphicsContext2D().clearRect(0, 0, 1000, 800);
+            if (rainAnimation != null) {
+                rainAnimation.stop();
+            }
+            if (rainCanvas != null) {
+                rainCanvas.getGraphicsContext2D().clearRect(0, 0, rainCanvas.getWidth(), rainCanvas.getHeight());
+                rainCanvas.setVisible(false); // Hide the canvas when not in use
+            }
         });
         pauseRain.play();
     }
@@ -769,11 +806,10 @@ public class GardenUIController {
     }
 
     private void showSunnyWeather() {
-
-        if(flag == 1)
+        if(flag == 1) {
             stopRainAfterFiveSeconds();
+        }
         flag = 1;
-        //rainCanvas.getGraphicsContext2D().clearRect(0, 0, anchorPane.getWidth(), anchorPane.getHeight());
 
         logger.info("Day: " + logDay + " Displayed sunny weather");
 
@@ -1015,14 +1051,6 @@ public class GardenUIController {
     }
 
     private void addPlantToGrid(String name, String imageFile) {
-
-        Canvas canvas = new Canvas(800, 600);
-        startRainAnimation(canvas);
-
-        Group root = new Group();
-        root.getChildren().add(canvas);
-
-
         logger.info("Day: " + logDay + " Adding plant to grid: " + name + " with image: " + imageFile);
 
         Plant plant = plantManager.getPlantByName(name); // Assume this method retrieves the correct plant
@@ -1055,7 +1083,6 @@ public class GardenUIController {
 
                     farmerPause.setOnFinished(event -> {
                         // Code to execute after the 5-second pause
-//                    Need row and col for logging
                         plant.setRow(row);
                         plant.setCol(col);
                         gardenGrid.addPlant(plant, row, col);
@@ -1074,10 +1101,9 @@ public class GardenUIController {
                         });
                     });
 
-// Start the pause
+                    // Start the pause
                     farmerPause.play();
                     placed = true;
-
                 }
                 attempts++;
             }
@@ -1087,53 +1113,6 @@ public class GardenUIController {
         } else {
             System.err.println("Plant not found: " + name);
         }
-    }
-
-    public void startRainAnimation(Canvas canvas) {
-        // Raindrop class (local definition inside the function)
-        class Raindrop {
-            double x, y;
-            double speed;
-
-            public Raindrop(double x, double y, double speed) {
-                this.x = x;
-                this.y = y;
-                this.speed = speed;
-            }
-        }
-
-        List<Raindrop> raindrops = new ArrayList<>();
-        Random random = new Random();
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        // Generate initial raindrops
-        for (int i = 0; i < 100; i++) {
-            raindrops.add(new Raindrop(random.nextDouble() * canvas.getWidth(),
-                    random.nextDouble() * -canvas.getHeight(),
-                    2 + random.nextDouble() * 4));
-        }
-
-        // Animation timer for the rain effect
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                // Update raindrops
-                for (Raindrop drop : raindrops) {
-                    drop.y += drop.speed;
-                    if (drop.y > canvas.getHeight()) {
-                        drop.y = random.nextDouble() * -100;
-                        drop.x = random.nextDouble() * canvas.getWidth();
-                    }
-                }
-
-                // Draw raindrops
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                gc.setFill(Color.CYAN);
-                for (Raindrop drop : raindrops) {
-                    gc.fillOval(drop.x, drop.y, 2, 10);
-                }
-            }
-        }.start();
     }
 
     private void initializeLogger() {
