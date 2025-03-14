@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.example.ooad_project.Events.SprinklerEvent;
 
-import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WateringSystem implements Runnable {

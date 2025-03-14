@@ -63,15 +63,16 @@
             </HBox>
         </VBox>
 
-        <VBox alignment="TOP_RIGHT" spacing="10" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <VBox alignment="TOP_RIGHT" spacing="15" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <MenuButton fx:id="treeMenuButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0"
-                        text="Root Plants" textAlignment="CENTER" textFill="#056b25"
-                        style="-fx-font-size: 16px; -fx-padding: 5px"/>
+                        text="Trees" textAlignment="CENTER" popupSide="BOTTOM"
+                        style="-fx-background-radius: 15px; -fx-border-radius: 15px; -fx-background-color: #8BC34A; -fx-border-color: #689F38; -fx-border-width: 2px; -fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2); -fx-content-display: CENTER;"/>
             <MenuButton fx:id="flowerMenuButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0"
-                        text="Fruits" textAlignment="CENTER" textFill="#ae5cad"
-                        style="-fx-font-size: 16px; -fx-padding: 5px"/>
+                        text="Flowers" textAlignment="CENTER" popupSide="BOTTOM"
+                        style="-fx-background-radius: 15px; -fx-border-radius: 15px; -fx-background-color: #FF9800; -fx-border-color: #F57C00; -fx-border-width: 2px; -fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2); -fx-content-display: CENTER;"/>
             <MenuButton fx:id="vegetableMenuButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0"
-                        text="Leafy Plants" textFill="#24ab4a" style="-fx-font-size: 16px; -fx-padding: 5px"/>
+                        text="Vegetable" textAlignment="CENTER" popupSide="BOTTOM"
+                        style="-fx-background-radius: 15px; -fx-border-radius: 15px; -fx-background-color: #4CAF50; -fx-border-color: #388E3C; -fx-border-width: 2px; -fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2); -fx-content-display: CENTER;"/>
         </VBox>
     </AnchorPane>
 </StackPane>

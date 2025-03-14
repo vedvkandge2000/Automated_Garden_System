@@ -2,7 +2,6 @@ package com.example.ooad_project;
 
 import com.example.ooad_project.API.GardenSimulationAPI;
 import com.example.ooad_project.Events.*;
-import com.example.ooad_project.Parasite.Parasite;
 import com.example.ooad_project.Parasite.ParasiteManager;
 import com.example.ooad_project.Plant.Children.Flower;
 import com.example.ooad_project.Plant.Plant;
@@ -14,7 +13,6 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -199,6 +197,65 @@ public class GardenUIController {
         vegetableMenuButton.setText("Vegetable"); // Updated Name
         treeMenuButton.setText("Trees");
         flowerMenuButton.setText("Flowers");
+        
+        // Apply custom styling to menu buttons
+        String treeButtonStyle = "-fx-background-radius: 15px; " +
+                                "-fx-border-radius: 15px; " +
+                                "-fx-background-color: #8BC34A; " +
+                                "-fx-border-color: #689F38; " +
+                                "-fx-border-width: 2px; " +
+                                "-fx-font-weight: bold; " +
+                                "-fx-font-size: 14px; " +
+                                "-fx-text-fill: white; " +
+                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2); " +
+                                "-fx-content-display: CENTER;";
+                                
+        String flowerButtonStyle = "-fx-background-radius: 15px; " +
+                                "-fx-border-radius: 15px; " +
+                                "-fx-background-color: #FF9800; " +
+                                "-fx-border-color: #F57C00; " +
+                                "-fx-border-width: 2px; " +
+                                "-fx-font-weight: bold; " +
+                                "-fx-font-size: 14px; " +
+                                "-fx-text-fill: white; " +
+                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2); " +
+                                "-fx-content-display: CENTER;";
+                                
+        String vegetableButtonStyle = "-fx-background-radius: 15px; " +
+                                "-fx-border-radius: 15px; " +
+                                "-fx-background-color: #4CAF50; " +
+                                "-fx-border-color: #388E3C; " +
+                                "-fx-border-width: 2px; " +
+                                "-fx-font-weight: bold; " +
+                                "-fx-font-size: 14px; " +
+                                "-fx-text-fill: white; " +
+                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2); " +
+                                "-fx-content-display: CENTER;";
+        
+        // Make the entire button area clickable by adding a click handler to the button
+        vegetableMenuButton.setOnMouseClicked(event -> vegetableMenuButton.show());
+        treeMenuButton.setOnMouseClicked(event -> treeMenuButton.show());
+        flowerMenuButton.setOnMouseClicked(event -> flowerMenuButton.show());
+        
+        // Add hover effects to the buttons
+        vegetableMenuButton.setOnMouseEntered(e -> vegetableMenuButton.setStyle(vegetableButtonStyle + "-fx-background-color: #66BB6A;"));
+        vegetableMenuButton.setOnMouseExited(e -> vegetableMenuButton.setStyle(vegetableButtonStyle));
+        
+        treeMenuButton.setOnMouseEntered(e -> treeMenuButton.setStyle(treeButtonStyle + "-fx-background-color: #9CCC65;"));
+        treeMenuButton.setOnMouseExited(e -> treeMenuButton.setStyle(treeButtonStyle));
+        
+        flowerMenuButton.setOnMouseEntered(e -> flowerMenuButton.setStyle(flowerButtonStyle + "-fx-background-color: #FFA726;"));
+        flowerMenuButton.setOnMouseExited(e -> flowerMenuButton.setStyle(flowerButtonStyle));
+        
+        vegetableMenuButton.setStyle(vegetableButtonStyle);
+        treeMenuButton.setStyle(treeButtonStyle);
+        flowerMenuButton.setStyle(flowerButtonStyle);
+        
+        // Set minimum width for consistent button sizes
+        vegetableMenuButton.setMinWidth(200);
+        treeMenuButton.setMinWidth(200);
+        flowerMenuButton.setMinWidth(200);
+        
         loadPlantsData();
 
         log4jLogger.info("GardenUIController initialized");
@@ -796,8 +853,10 @@ public class GardenUIController {
 
     //    This is the method that will populate the menu buttons with the plant data
     private void loadPlantsData() {
-
         logger.info("Day: " + currentDay + " Loading plant data from JSON file");
+
+        // Apply CSS styling to ensure the popup menu matches the button width
+        // This is done through the custom menu items which we've already set to 200px width
 
         for (Flower flower : plantManager.getFlowers()) {
             CustomMenuItem menuItem = createImageMenuItem(flower.getName(), flower.getCurrentImage());
@@ -822,36 +881,48 @@ public class GardenUIController {
             menuItem.setOnAction(e -> addPlantToGrid(vegetable.getName(), vegetable.getCurrentImage()));
             vegetableMenuButton.getItems().add(menuItem);
         }
-
-
     }
 
     private CustomMenuItem createImageMenuItem(String name, String imagePath) {
-        logger.info("3");
         // Create an HBox to hold the image and text
-        HBox hBox = new HBox(20); // 10px spacing
-        logger.info("4");
+        HBox hBox = new HBox(10); // 10px spacing
         hBox.setAlignment(Pos.CENTER_LEFT);
-        logger.info("5");
+        hBox.setPadding(new javafx.geometry.Insets(5, 10, 5, 10));
+        hBox.setStyle("-fx-background-radius: 10px; -fx-background-color: #F1F8E9;");
+        hBox.setPrefWidth(200); // Match the width of menu buttons
 
         // Load the image
-        logger.info(name);
-        logger.info(imagePath);
         ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/" + imagePath)));
-        logger.info("6");
-        imageView.setFitWidth(120); // Set width
-        imageView.setFitHeight(80); // Set height
+        imageView.setFitWidth(60); // Smaller width
+        imageView.setFitHeight(40); // Smaller height
+        imageView.setPreserveRatio(true);
+        
+        // Add a border and rounded corners to the image
+        StackPane imageContainer = new StackPane(imageView);
+        imageContainer.setStyle("-fx-background-color: white; -fx-border-color: #AED581; " +
+                               "-fx-border-width: 2; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+        imageContainer.setPadding(new javafx.geometry.Insets(3));
 
         // Create a label for the text
         Label label = new Label(name);
-        label.setStyle("-fx-font-size: 28px;");
+        label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #33691E;");
+        
+        // Use HBox.setHgrow to allow the label to fill available space
+        HBox.setHgrow(label, javafx.scene.layout.Priority.ALWAYS);
 
-        // Add the image and text to the HBox
-        hBox.getChildren().addAll(imageView, label);
+        // Add the image container and text to the HBox
+        hBox.getChildren().addAll(imageContainer, label);
 
         // Wrap the HBox in a CustomMenuItem
         CustomMenuItem customMenuItem = new CustomMenuItem(hBox);
         customMenuItem.setHideOnClick(true); // Automatically hide the dropdown when clicked
+        
+        // Make the entire menu item take the full width
+        customMenuItem.setStyle("-fx-pref-width: 200;");
+        
+        // Add hover effect
+        hBox.setOnMouseEntered(e -> hBox.setStyle("-fx-background-radius: 10px; -fx-background-color: #DCEDC8; -fx-pref-width: 200;"));
+        hBox.setOnMouseExited(e -> hBox.setStyle("-fx-background-radius: 10px; -fx-background-color: #F1F8E9; -fx-pref-width: 200;"));
 
         return customMenuItem;
     }
