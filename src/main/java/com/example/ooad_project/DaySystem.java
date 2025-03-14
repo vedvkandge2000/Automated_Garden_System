@@ -18,7 +18,7 @@ public class DaySystem {
     GardenGrid gardenGrid = GardenGrid.getInstance();
 
     private DaySystem() {
-        logger.info("Day System Initialized");
+        logger.info("📅 Day System Initialized");
         scheduler = Executors.newScheduledThreadPool(1);
         currentDay = 0;  // Start at Day 0
         scheduler.scheduleAtFixedRate(this::endOfDayActions, 0, 30, TimeUnit.SECONDS);
@@ -41,7 +41,7 @@ public class DaySystem {
 
     private void endOfDayActions() {
         try {
-            logger.info("End of Day: {}", getCurrentDay());
+            logger.info("🌙 End of Day: {}", getCurrentDay());
 
             EventBus.publish("SprinklerActivationEvent", null);
 
@@ -58,10 +58,10 @@ public class DaySystem {
 
             incrementDay();
             EventBus.publish("DayChangeEvent", new DayChangeEvent(getCurrentDay()));
-            logger.info("Changed day to: {}", getCurrentDay());
+            logger.info("🌅 Changed day to: {}", getCurrentDay());
 
         } catch (Exception e) {
-            logger.error("Error during end of day processing: ", e);
+            logger.error("❌ Error during end of day processing: ", e);
         }
     }
 }

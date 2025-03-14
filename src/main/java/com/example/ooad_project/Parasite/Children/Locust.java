@@ -28,12 +28,12 @@ public class Locust extends Parasite {
             super.publishDamageEvent(new ParasiteDamageEvent(plant.getRow(),plant.getCol(), this.getDamage()));
 
             plant.setCurrentHealth(newHealth);
-            logger.info("Locust has successfully damaged the plant {} at position ({}, {}). Old health: {}. New health: {}",
+            logger.info("🦗 Locust has successfully damaged the plant {} at position ({}, {}). Old health: {}. New health: {}",
                     plant.getName(), plant.getRow(), plant.getCol(), oldHealth, newHealth);
 
         } else {
             // If missed, do nothing
-            logger.info("Locust attempted to damage the plant {} at position ({}, {}) but missed.",
+            logger.info("🦗 Locust attempted to damage the plant {} at position ({}, {}) but missed.",
                     plant.getName(), plant.getRow(), plant.getCol());
         }
     }

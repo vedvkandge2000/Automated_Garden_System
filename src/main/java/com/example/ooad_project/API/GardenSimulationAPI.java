@@ -23,7 +23,7 @@ public class GardenSimulationAPI implements GardenSimulationAPIInterface {
 
     @Override
     public void initializeGarden() {
-        logger.info("Initializing Garden");
+        logger.info("🌱 Initializing Garden");
         GardenGrid gardenGrid = GardenGrid.getInstance();
         PlantManager plantManager = PlantManager.getInstance();
 
@@ -37,7 +37,7 @@ public class GardenSimulationAPI implements GardenSimulationAPIInterface {
     @Override
     public Map<String, Object> getPlants() {
         try {
-            logger.info("API called to get plant information");
+            logger.info("📊 API called to get plant information");
 
             List<String> plantNames = new ArrayList<>();
             List<Integer> waterRequirements = new ArrayList<>();
@@ -60,29 +60,29 @@ public class GardenSimulationAPI implements GardenSimulationAPIInterface {
 
             return response;
         } catch (Exception e) {
-            logger.error("Error occurred while retrieving plant information", e);
+            logger.error("❌ Error occurred while retrieving plant information", e);
             return null;
         }
     }
 
     @Override
     public void rain(int amount) {
-        logger.info("API called rain with amount: {}", amount);
+        logger.info("🌧️ API called rain with amount: {}", amount);
         EventBus.publish("RainEvent", new RainEvent(amount));
     }
 
     @Override
     public void temperature(int amount) {
-        logger.info("API called temperature set to: {}", amount);
+        logger.info("🌡️ API called temperature set to: {}", amount);
         EventBus.publish("TemperatureEvent", new TemperatureEvent(amount));
     }
 
     @Override
     public void parasite(String name) {
-        logger.info("API called to handle parasite: {}", name);
+        logger.info("🐛 API called to handle parasite: {}", name);
         Parasite parasite = parasiteManager.getParasiteByName(name);
         if(parasite == null) {
-            logger.info("API - Parasite with name {} not found", name);
+            logger.info("⚠️ API - Parasite with name {} not found", name);
             return;
         }
         EventBus.publish("ParasiteEvent", new ParasiteEvent(parasite));
@@ -91,7 +91,7 @@ public class GardenSimulationAPI implements GardenSimulationAPIInterface {
 
     @Override
     public void getState() {
-        logger.info("Day: " + DaySystem.getInstance().getCurrentDay() + "API called to get current state of the garden.");
+        logger.info("📅 Day: " + DaySystem.getInstance().getCurrentDay() + " API called to get current state of the garden.");
         StringBuilder stateBuilder = new StringBuilder();
         stateBuilder.append(String.format("Current Garden State as of Day %d:\n", DaySystem.getInstance().getCurrentDay()));
 
@@ -99,13 +99,13 @@ public class GardenSimulationAPI implements GardenSimulationAPIInterface {
         ArrayList<Plant> plants = gardenGrid.getPlants();
 
         if (plants.isEmpty()) {
-            stateBuilder.append("No plants are currently in the garden.\n");
+            stateBuilder.append("🌱 No plants are currently in the garden.\n");
         } else {
             for (Plant plant : plants) {
-                stateBuilder.append(String.format("\nPlant Name: %s (Position: Row %d, Col %d)\n", plant.getName(), plant.getRow(), plant.getCol()));
+                stateBuilder.append(String.format("\n🌿 Plant Name: %s (Position: Row %d, Col %d)\n", plant.getName(), plant.getRow(), plant.getCol()));
                 stateBuilder.append(String.format("  - Current Health: %d/%d\n", plant.getCurrentHealth(), plant.getHealthFull()));
                 stateBuilder.append(String.format("  - Growth Stage: %s\n", plant.getGrowthStageDescription()));
-                stateBuilder.append(String.format("  - Water Status: %s (Current Water: %d, Requirement: %d)\n", plant.getIsWatered() ? "Watered" : "Needs Water", plant.getCurrentWater(), plant.getWaterRequirement()));
+                stateBuilder.append(String.format("  - Water Status: %s (Current Water: %d, Requirement: %d)\n", plant.getIsWatered() ? "💧 Watered" : "💦 Needs Water", plant.getCurrentWater(), plant.getWaterRequirement()));
                 stateBuilder.append(String.format("  - Temperature Requirement: %d degrees\n", plant.getTemperatureRequirement()));
                 stateBuilder.append(String.format("  - Current Image: %s\n", plant.getCurrentImage()));
                 stateBuilder.append(String.format("  - Vulnerable to: %s\n", String.join(", ", plant.getVulnerableTo())));
