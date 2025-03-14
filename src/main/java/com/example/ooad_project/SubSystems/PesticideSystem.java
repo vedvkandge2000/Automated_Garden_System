@@ -19,7 +19,7 @@ public class PesticideSystem implements Runnable{
     public PesticideSystem() {
         this.gardenGrid = GardenGrid.getInstance();
 //        System.out.println("Pesticide System Initialized");
-        logger.info("Pesticide System Initialized");
+        logger.info("🧪 Pesticide System Initialized");
 
         EventBus.subscribe("DayChangeEvent", event -> handleDayChangeEvent((DayChangeEvent) event));
 //        Subscribe to the ParasiteEvent that will be published by the GardenSimulationAPI
@@ -46,7 +46,7 @@ public class PesticideSystem implements Runnable{
 
 //                    Apply the parasite to the plant
                     parasite.affectPlant(plant);
-                    logger.info("Day: " + currentDay + " Pesticide system applied {} to {} at position ({}, {})", parasite.getName(), plant.getName(), i, j);
+                    logger.info("💉 Day: " + currentDay + " Pesticide system applied {} to {} at position ({}, {})", parasite.getName(), plant.getName(), i, j);
 //                    Heal the plant by half the damage of the parasite
                     plant.healPlant(parasite.getDamage()/2);
                 }

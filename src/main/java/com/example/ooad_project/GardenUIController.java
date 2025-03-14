@@ -620,7 +620,7 @@ public class GardenUIController {
             gridPane.getChildren().add(sprinklerAnimationGroup);
 
             // Remove animation after it completes
-            PauseTransition pause = new PauseTransition(Duration.seconds(3)); // Total duration for animation to persist
+            PauseTransition pause = new PauseTransition(Duration.seconds(5)); // Total duration for animation to persist
             pause.setOnFinished(_ -> gridPane.getChildren().remove(sprinklerAnimationGroup));
             pause.play();
 

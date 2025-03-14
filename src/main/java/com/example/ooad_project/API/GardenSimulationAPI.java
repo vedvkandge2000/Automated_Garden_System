@@ -28,9 +28,6 @@ public class GardenSimulationAPI implements GardenSimulationAPIInterface {
         PlantManager plantManager = PlantManager.getInstance();
 
         EventBus.publish("InitializeGarden", null);
-
-
-//        }
     }
 
 

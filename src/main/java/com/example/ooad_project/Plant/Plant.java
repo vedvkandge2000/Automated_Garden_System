@@ -69,12 +69,12 @@ public abstract class Plant {
         // Update the plant image if the stage has changed due to healing
         if (previousStage != currentStage) {
             updatePlantImage(currentStage);
-            logger.info("Plant: {} at position ({}, {}) health stage changed to {}, updated image to {}",
+            logger.info("🌱 Plant: {} at position ({}, {}) health stage changed to {}, updated image to {}",
                     this.name, this.row, this.col, currentStage, this.currentImage);
         }
 
         // Log the healing action
-        logger.info("Plant: {} at position ({}, {}) healed by {} points, new health: {}",
+        logger.info("💚 Plant: {} at position ({}, {}) healed by {} points, new health: {}",
                 this.name, this.row, this.col, healAmount, this.currentHealth);
     }
 
@@ -100,7 +100,7 @@ public abstract class Plant {
         // Check if the health stage has changed, then update the image
         if (previousStage != currentStage) {
             updatePlantImage(currentStage);
-            logger.info("Plant: {} at position ({}, {}) updated to new health stage: {}, image updated to {}", this.name, this.row, this.col, currentStage, this.currentImage);
+            logger.info("🌿 Plant: {} at position ({}, {}) updated to new health stage: {}, image updated to {}", this.name, this.row, this.col, currentStage, this.currentImage);
         }
     }
 
