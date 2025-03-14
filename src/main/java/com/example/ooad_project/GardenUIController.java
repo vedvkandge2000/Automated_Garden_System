@@ -76,6 +76,13 @@ public class GardenUIController {
     @FXML
     private AnchorPane anchorPane;
 
+    @FXML
+    private StackPane weatherIconContainer;
+    @FXML
+    private StackPane temperatureIconContainer;
+    @FXML
+    private StackPane parasiteIconContainer;
+
     int flag = 0;
     int logDay = 0;
     DayChangeEvent dayChangeEvent;
@@ -148,6 +155,9 @@ public class GardenUIController {
         showOptimalTemperature();
 
         showNoParasites();
+
+        // Initialize icon containers with default icons
+        initializeIconContainers();
 
 //
 //         Load the background image
@@ -594,8 +604,30 @@ public class GardenUIController {
 
     }
 
-    private void initializeLogger() {
-//        LoggerAppender.setController(this);
+    private void initializeIconContainers() {
+        // Initialize weather icon container
+        Image sunImage = new Image(getClass().getResourceAsStream("/images/sun.png"));
+        ImageView sunImageView = new ImageView(sunImage);
+        sunImageView.setFitHeight(50);
+        sunImageView.setFitWidth(50);
+        weatherIconContainer.getChildren().clear();
+        weatherIconContainer.getChildren().add(sunImageView);
+        
+        // Initialize temperature icon container
+        Image tempImage = new Image(getClass().getResourceAsStream("/images/Temperature/normalTemperature.png"));
+        ImageView tempImageView = new ImageView(tempImage);
+        tempImageView.setFitHeight(90);
+        tempImageView.setFitWidth(45);
+        temperatureIconContainer.getChildren().clear();
+        temperatureIconContainer.getChildren().add(tempImageView);
+        
+        // Initialize parasite icon container
+        Image parasiteImage = new Image(getClass().getResourceAsStream("/images/Parasites/noParasite.png"));
+        ImageView parasiteImageView = new ImageView(parasiteImage);
+        parasiteImageView.setFitHeight(50);
+        parasiteImageView.setFitWidth(50);
+        parasiteIconContainer.getChildren().clear();
+        parasiteIconContainer.getChildren().add(parasiteImageView);
     }
 
     public void handleDayChangeEvent(DayChangeEvent event) {
@@ -604,7 +636,20 @@ public class GardenUIController {
         dayChangeEvent = event;
         Platform.runLater(() -> {
             logDay = event.getDay();
-            currentDay.setText("Day: " + event.getDay());
+            currentDay.setText(String.valueOf(event.getDay()));
+            
+            // Add a visual effect for day change
+            currentDay.setStyle("-fx-text-fill: #ffd700; -fx-font-size: 24px; -fx-font-weight: bold;");
+            
+            // Create a scale transition for the day number
+            javafx.animation.ScaleTransition scaleTransition = new javafx.animation.ScaleTransition(Duration.millis(500), currentDay);
+            scaleTransition.setFromX(1.0);
+            scaleTransition.setFromY(1.0);
+            scaleTransition.setToX(1.5);
+            scaleTransition.setToY(1.5);
+            scaleTransition.setCycleCount(2);
+            scaleTransition.setAutoReverse(true);
+            scaleTransition.play();
         });
     }
 
@@ -700,12 +745,18 @@ public class GardenUIController {
             // Create an ImageView for the rain icon
             Image rainImage = new Image(getClass().getResourceAsStream("/images/rain.png"));
             ImageView rainImageView = new ImageView(rainImage);
-            rainImageView.setFitHeight(100);
-            rainImageView.setFitWidth(100);
+            rainImageView.setFitHeight(50);
+            rainImageView.setFitWidth(50);
 
+            // Set the icon in the container
+            weatherIconContainer.getChildren().clear();
+            weatherIconContainer.getChildren().add(rainImageView);
+            
             // Set the text with the rain amount
-            rainStatusLabel.setGraphic(rainImageView);
             rainStatusLabel.setText(event.getAmount() + "mm");
+            
+            // Change the background color to indicate rain
+            rainStatusLabel.getParent().getParent().setStyle("-fx-background-color: rgba(0,102,204,0.8); -fx-background-radius: 10px; -fx-padding: 10px;");
 
             // Create a pause transition of 5 seconds
             PauseTransition pause = new PauseTransition(Duration.seconds(5));
@@ -730,12 +781,18 @@ public class GardenUIController {
             // Create an ImageView for the sun icon
             Image sunImage = new Image(getClass().getResourceAsStream("/images/sun.png"));
             ImageView sunImageView = new ImageView(sunImage);
-            sunImageView.setFitHeight(100);
-            sunImageView.setFitWidth(100);
+            sunImageView.setFitHeight(50);
+            sunImageView.setFitWidth(50);
 
+            // Set the icon in the container
+            weatherIconContainer.getChildren().clear();
+            weatherIconContainer.getChildren().add(sunImageView);
+            
             // Set the text with the sun status
-            rainStatusLabel.setGraphic(sunImageView);
             rainStatusLabel.setText("Sunny");
+            
+            // Reset the background color
+            rainStatusLabel.getParent().getParent().setStyle("-fx-background-color: rgba(0,102,204,0.6); -fx-background-radius: 10px; -fx-padding: 10px;");
         });
     }
 
@@ -749,21 +806,32 @@ public class GardenUIController {
 
             // Create an ImageView for the temperature icon
             String image = "normalTemperature.png";
-            int fitHeight = 150;
-            int fitWidth = 50;
-            if (event.getAmount() <= 50 ) {
+            int fitHeight = 90;
+            int fitWidth = 45;
+            String bgColor = "rgba(204,51,0,0.6)";
+            
+            if (event.getAmount() <= 50) {
                 image = "coldTemperature.png";
-            } else if(event.getAmount() >= 60){
+                bgColor = "rgba(0,102,204,0.8)"; // Cooler blue for cold
+            } else if(event.getAmount() >= 60) {
                 image = "hotTemperature.png";
+                bgColor = "rgba(255,51,0,0.8)"; // Hotter red for hot
             }
+            
             Image tempImage = new Image(getClass().getResourceAsStream("/images/Temperature/" + image));
             ImageView tempImageView = new ImageView(tempImage);
             tempImageView.setFitHeight(fitHeight);
             tempImageView.setFitWidth(fitWidth);
-            tempImageView.setLayoutX(300.0);
+            
+            // Set the icon in the container
+            temperatureIconContainer.getChildren().clear();
+            temperatureIconContainer.getChildren().add(tempImageView);
+            
             // Set the text with the temperature amount
-            temperatureStatusLabel.setGraphic(tempImageView);
             temperatureStatusLabel.setText(event.getAmount() + "°F");
+            
+            // Change the background color based on temperature
+            temperatureStatusLabel.getParent().getParent().setStyle("-fx-background-color: " + bgColor + "; -fx-background-radius: 10px; -fx-padding: 15px; -fx-min-height: 120px;");
 
             // Create a pause transition of 5 seconds
             PauseTransition pause = new PauseTransition(Duration.seconds(5));
@@ -783,12 +851,18 @@ public class GardenUIController {
             // Create an ImageView for the optimal temperature icon
             Image optimalImage = new Image(getClass().getResourceAsStream("/images/Temperature/normalTemperature.png"));
             ImageView optimalImageView = new ImageView(optimalImage);
-            optimalImageView.setFitHeight(150);
-            optimalImageView.setFitWidth(50);
-            optimalImageView.setLayoutX(100);
+            optimalImageView.setFitHeight(90);
+            optimalImageView.setFitWidth(45);
+            
+            // Set the icon in the container
+            temperatureIconContainer.getChildren().clear();
+            temperatureIconContainer.getChildren().add(optimalImageView);
+            
             // Set the text with the optimal status
-            temperatureStatusLabel.setGraphic(optimalImageView);
             temperatureStatusLabel.setText("Optimal");
+            
+            // Reset the background color
+            temperatureStatusLabel.getParent().getParent().setStyle("-fx-background-color: rgba(204,51,0,0.6); -fx-background-radius: 10px; -fx-padding: 15px; -fx-min-height: 120px;");
         });
     }
 
@@ -798,10 +872,10 @@ public class GardenUIController {
 
         Platform.runLater(() -> {
             // Update UI to reflect parasite event
-//            System.out.println("Changing UI to reflect parasite event");
-
-            // Create an ImageView for the sad icon
+            
+            // Create an ImageView for the parasite icon
             Image parasiteImage = new Image(getClass().getResourceAsStream("/images/Parasites/noParasite.png"));
+            String bgColor = "rgba(153,51,51,0.7)"; // Less bright red background for parasite alert
 
             if (Objects.equals(event.getParasite().getName(), "Slugs")) {
                 parasiteImage = new Image(getClass().getResourceAsStream("/images/Parasites/slugDetected.png"));
@@ -817,12 +891,19 @@ public class GardenUIController {
                 parasiteImage = new Image(getClass().getResourceAsStream("/images/Parasites/parasiteDetected.png"));
             }
 
-            ImageView sadImageView = new ImageView(parasiteImage);
-            sadImageView.setFitHeight(60);
-            sadImageView.setFitWidth(60);
+            ImageView parasiteImageView = new ImageView(parasiteImage);
+            parasiteImageView.setFitHeight(50);
+            parasiteImageView.setFitWidth(50);
+            
+            // Set the icon in the container
+            parasiteIconContainer.getChildren().clear();
+            parasiteIconContainer.getChildren().add(parasiteImageView);
+            
             // Set the text with the parasite name
-            parasiteStatusLabel.setGraphic(sadImageView);
             parasiteStatusLabel.setText(event.getParasite().getName() + " detected");
+            
+            // Change the background color to indicate parasite alert
+            parasiteStatusLabel.getParent().getParent().setStyle("-fx-background-color: " + bgColor + "; -fx-background-radius: 10px; -fx-padding: 10px;");
 
             // Create a pause transition of 5 seconds
             PauseTransition pause = new PauseTransition(Duration.seconds(5));
@@ -842,12 +923,18 @@ public class GardenUIController {
             // Create an ImageView for the happy icon
             Image happyImage = new Image(getClass().getResourceAsStream("/images/Parasites/noParasite.png"));
             ImageView happyImageView = new ImageView(happyImage);
-            happyImageView.setFitHeight(60);
-            happyImageView.setFitWidth(60);
+            happyImageView.setFitHeight(50);
+            happyImageView.setFitWidth(50);
 
+            // Set the icon in the container
+            parasiteIconContainer.getChildren().clear();
+            parasiteIconContainer.getChildren().add(happyImageView);
+            
             // Set the text with the no parasites status
-            parasiteStatusLabel.setGraphic(happyImageView);
             parasiteStatusLabel.setText("No Parasites");
+            
+            // Reset the background color
+            parasiteStatusLabel.getParent().getParent().setStyle("-fx-background-color: rgba(102,153,0,0.6); -fx-background-radius: 10px; -fx-padding: 10px;");
         });
     }
 
@@ -1047,5 +1134,9 @@ public class GardenUIController {
                 }
             }
         }.start();
+    }
+
+    private void initializeLogger() {
+        // LoggerAppender.setController(this);
     }
 }
