@@ -209,63 +209,66 @@ public class GardenUIController {
         treeMenuButton.setText("Trees");
         flowerMenuButton.setText("Flowers");
         
-        // Apply custom styling to menu buttons
-        String treeButtonStyle = "-fx-background-radius: 15px; " +
+        // Apply custom styling to menu buttons with gradient backgrounds
+        final String baseTreeButtonStyle = "-fx-background-radius: 15px; " +
                                 "-fx-border-radius: 15px; " +
-                                "-fx-background-color: #8BC34A; " +
-                                "-fx-border-color: #689F38; " +
+                                "-fx-background-color: linear-gradient(to bottom, #8BC34A, #689F38); " +
+                                "-fx-border-color: #4CAF50; " +
                                 "-fx-border-width: 2px; " +
                                 "-fx-font-weight: bold; " +
-                                "-fx-font-size: 14px; " +
+                                "-fx-font-size: 16px; " +
                                 "-fx-text-fill: white; " +
-                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2); " +
-                                "-fx-content-display: CENTER;";
+                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 8, 0, 0, 3); " +
+                                "-fx-content-display: CENTER; " +
+                                "-fx-cursor: hand;";
                                 
-        String flowerButtonStyle = "-fx-background-radius: 15px; " +
+        final String baseFlowerButtonStyle = "-fx-background-radius: 15px; " +
                                 "-fx-border-radius: 15px; " +
-                                "-fx-background-color: #FF9800; " +
-                                "-fx-border-color: #F57C00; " +
+                                "-fx-background-color: linear-gradient(to bottom, #FF9800, #F57C00); " +
+                                "-fx-border-color: #FF5722; " +
                                 "-fx-border-width: 2px; " +
                                 "-fx-font-weight: bold; " +
-                                "-fx-font-size: 14px; " +
+                                "-fx-font-size: 16px; " +
                                 "-fx-text-fill: white; " +
-                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2); " +
-                                "-fx-content-display: CENTER;";
+                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 8, 0, 0, 3); " +
+                                "-fx-content-display: CENTER; " +
+                                "-fx-cursor: hand;";
                                 
-        String vegetableButtonStyle = "-fx-background-radius: 15px; " +
+        final String baseVegetableButtonStyle = "-fx-background-radius: 15px; " +
                                 "-fx-border-radius: 15px; " +
-                                "-fx-background-color: #4CAF50; " +
-                                "-fx-border-color: #388E3C; " +
+                                "-fx-background-color: linear-gradient(to bottom, #4CAF50, #388E3C); " +
+                                "-fx-border-color: #2E7D32; " +
                                 "-fx-border-width: 2px; " +
                                 "-fx-font-weight: bold; " +
-                                "-fx-font-size: 14px; " +
+                                "-fx-font-size: 16px; " +
                                 "-fx-text-fill: white; " +
-                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2); " +
-                                "-fx-content-display: CENTER;";
+                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 8, 0, 0, 3); " +
+                                "-fx-content-display: CENTER; " +
+                                "-fx-cursor: hand;";
         
         // Make the entire button area clickable by adding a click handler to the button
         vegetableMenuButton.setOnMouseClicked(event -> vegetableMenuButton.show());
         treeMenuButton.setOnMouseClicked(event -> treeMenuButton.show());
         flowerMenuButton.setOnMouseClicked(event -> flowerMenuButton.show());
         
-        // Add hover effects to the buttons
-        vegetableMenuButton.setOnMouseEntered(e -> vegetableMenuButton.setStyle(vegetableButtonStyle + "-fx-background-color: #66BB6A;"));
-        vegetableMenuButton.setOnMouseExited(e -> vegetableMenuButton.setStyle(vegetableButtonStyle));
+        // Add hover effects to the buttons with glow effect
+        vegetableMenuButton.setOnMouseEntered(e -> vegetableMenuButton.setStyle(baseVegetableButtonStyle + "-fx-background-color: linear-gradient(to bottom, #66BB6A, #43A047); -fx-effect: dropshadow(gaussian, rgba(0,255,0,0.3), 15, 0, 0, 0);"));
+        vegetableMenuButton.setOnMouseExited(e -> vegetableMenuButton.setStyle(baseVegetableButtonStyle));
         
-        treeMenuButton.setOnMouseEntered(e -> treeMenuButton.setStyle(treeButtonStyle + "-fx-background-color: #9CCC65;"));
-        treeMenuButton.setOnMouseExited(e -> treeMenuButton.setStyle(treeButtonStyle));
+        treeMenuButton.setOnMouseEntered(e -> treeMenuButton.setStyle(baseTreeButtonStyle + "-fx-background-color: linear-gradient(to bottom, #9CCC65, #7CB342); -fx-effect: dropshadow(gaussian, rgba(0,255,0,0.3), 15, 0, 0, 0);"));
+        treeMenuButton.setOnMouseExited(e -> treeMenuButton.setStyle(baseTreeButtonStyle));
         
-        flowerMenuButton.setOnMouseEntered(e -> flowerMenuButton.setStyle(flowerButtonStyle + "-fx-background-color: #FFA726;"));
-        flowerMenuButton.setOnMouseExited(e -> flowerMenuButton.setStyle(flowerButtonStyle));
+        flowerMenuButton.setOnMouseEntered(e -> flowerMenuButton.setStyle(baseFlowerButtonStyle + "-fx-background-color: linear-gradient(to bottom, #FFA726, #FB8C00); -fx-effect: dropshadow(gaussian, rgba(255,153,0,0.3), 15, 0, 0, 0);"));
+        flowerMenuButton.setOnMouseExited(e -> flowerMenuButton.setStyle(baseFlowerButtonStyle));
         
-        vegetableMenuButton.setStyle(vegetableButtonStyle);
-        treeMenuButton.setStyle(treeButtonStyle);
-        flowerMenuButton.setStyle(flowerButtonStyle);
+        vegetableMenuButton.setStyle(baseVegetableButtonStyle);
+        treeMenuButton.setStyle(baseTreeButtonStyle);
+        flowerMenuButton.setStyle(baseFlowerButtonStyle);
         
         // Set minimum width for consistent button sizes
-        vegetableMenuButton.setMinWidth(200);
-        treeMenuButton.setMinWidth(200);
-        flowerMenuButton.setMinWidth(200);
+        vegetableMenuButton.setMinWidth(220);
+        treeMenuButton.setMinWidth(220);
+        flowerMenuButton.setMinWidth(220);
         
         loadPlantsData();
 
@@ -1008,27 +1011,26 @@ public class GardenUIController {
 
     private CustomMenuItem createImageMenuItem(String name, String imagePath) {
         // Create an HBox to hold the image and text
-        HBox hBox = new HBox(10); // 10px spacing
+        HBox hBox = new HBox(15); // Increased spacing
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new javafx.geometry.Insets(5, 10, 5, 10));
-        hBox.setStyle("-fx-background-radius: 10px; -fx-background-color: #F1F8E9;");
-        hBox.setPrefWidth(200); // Match the width of menu buttons
+        hBox.setPadding(new javafx.geometry.Insets(8, 12, 8, 12)); // Increased padding
+        hBox.getStyleClass().add("menu-item-container");
+        hBox.setPrefWidth(220); // Match the width of menu buttons
 
         // Load the image
         ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/images/" + imagePath)));
-        imageView.setFitWidth(60); // Smaller width
-        imageView.setFitHeight(40); // Smaller height
+        imageView.setFitWidth(65); // Slightly larger width
+        imageView.setFitHeight(45); // Slightly larger height
         imageView.setPreserveRatio(true);
         
-        // Add a border and rounded corners to the image
+        // Add a border and rounded corners to the image with glow effect
         StackPane imageContainer = new StackPane(imageView);
-        imageContainer.setStyle("-fx-background-color: white; -fx-border-color: #AED581; " +
-                               "-fx-border-width: 2; -fx-border-radius: 5px; -fx-background-radius: 5px;");
-        imageContainer.setPadding(new javafx.geometry.Insets(3));
+        imageContainer.getStyleClass().add("menu-item-image-container");
+        imageContainer.setPadding(new javafx.geometry.Insets(4));
 
-        // Create a label for the text
+        // Create a label for the text with custom font
         Label label = new Label(name);
-        label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #33691E;");
+        label.getStyleClass().add("menu-item-label");
         
         // Use HBox.setHgrow to allow the label to fill available space
         HBox.setHgrow(label, javafx.scene.layout.Priority.ALWAYS);
@@ -1041,11 +1043,16 @@ public class GardenUIController {
         customMenuItem.setHideOnClick(true); // Automatically hide the dropdown when clicked
         
         // Make the entire menu item take the full width
-        customMenuItem.setStyle("-fx-pref-width: 200;");
+        customMenuItem.setStyle("-fx-pref-width: 220px;");
         
-        // Add hover effect
-        hBox.setOnMouseEntered(e -> hBox.setStyle("-fx-background-radius: 10px; -fx-background-color: #DCEDC8; -fx-pref-width: 200;"));
-        hBox.setOnMouseExited(e -> hBox.setStyle("-fx-background-radius: 10px; -fx-background-color: #F1F8E9; -fx-pref-width: 200;"));
+        // Add hover effect with animation
+        hBox.setOnMouseEntered(e -> {
+            imageContainer.getStyleClass().add("menu-item-image-container-hover");
+        });
+        
+        hBox.setOnMouseExited(e -> {
+            imageContainer.getStyleClass().remove("menu-item-image-container-hover");
+        });
 
         return customMenuItem;
     }
