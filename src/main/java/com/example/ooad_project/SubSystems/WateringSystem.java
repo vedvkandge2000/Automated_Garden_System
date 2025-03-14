@@ -22,14 +22,14 @@ public class WateringSystem implements Runnable {
             try {
                 Thread.sleep(1000); // Check every second
             } catch (InterruptedException e) {
-                logger.error("Watering System interrupted");
+                logger.error("⚠️ Watering System interrupted");
                 return; // Exit if interrupted
             }
         }
     }
 
     public WateringSystem() {
-        logger.info("Watering System Initialized");
+        logger.info("🚰 Watering System Initialized");
 //        So our watering system is subscribed to the RainEvent
 //        When a rain event is published, the watering system will handle it
         EventBus.subscribe("RainEvent", event -> handleRain((RainEvent) event));
@@ -54,7 +54,7 @@ public class WateringSystem implements Runnable {
                 Plant plant = gardenGrid.getPlant(i, j);
                 if (plant != null) {
                     plant.addWater(event.getAmount());
-                    logger.info("Day: " + currentDay + " Watered {} at position ({}, {}) with {} water from rain", plant.getName(), i, j, event.getAmount());
+                    logger.info("💧 Day: " + currentDay + " Watered {} at position ({}, {}) with {} water from rain", plant.getName(), i, j, event.getAmount());
                 }
             }
         }
@@ -67,7 +67,7 @@ public class WateringSystem implements Runnable {
 //    It waters all the plants in the garden grid
 //    The amount of water each plant gets depends on how much water it needs
     private void sprinkle() {
-        logger.info("Day: " + currentDay + " Sprinklers activated!");
+        logger.info("🚿 Day: " + currentDay + " Sprinklers activated!");
         int counter = 0; // Counter to keep track of how many plants are watered
 
         for (int i = 0; i < gardenGrid.getNumRows(); i++) {
@@ -81,16 +81,16 @@ public class WateringSystem implements Runnable {
                         EventBus.publish("Day: " + currentDay + " SprinklerEvent", new SprinklerEvent(plant.getRow(), plant.getCol(), waterNeeded));
 
                         plant.addWater(waterNeeded);
-                        logger.info("Day: " + currentDay + " Sprinkled {} at position ({}, {}) with {} water from sprinklers", plant.getName(), i, j, waterNeeded);
+                        logger.info("💦 Day: " + currentDay + " Sprinkled {} at position ({}, {}) with {} water from sprinklers", plant.getName(), i, j, waterNeeded);
                         counter++;
                     }else {
-                        logger.info("Day: " + currentDay + " {} at position ({}, {}) does not need water", plant.getName(), i, j);
+                        logger.info("⏭️ Day: " + currentDay + " {} at position ({}, {}) does not need water", plant.getName(), i, j);
                     }
                 }
             }
         }
 
-        logger.info("Day: " + currentDay + " In total Sprinkled {} plants", counter);
+        logger.info("📊 Day: " + currentDay + " In total Sprinkled {} plants", counter);
     }
 }
 

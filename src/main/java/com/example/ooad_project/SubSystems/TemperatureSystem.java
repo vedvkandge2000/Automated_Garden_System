@@ -17,7 +17,7 @@ public class TemperatureSystem implements Runnable{
 //        Subscribe to the TemperatureEvent
 //        Published from GardenSimulationAPI
         this.gardenGrid = GardenGrid.getInstance();
-        logger.info("Temperature System Initialized");
+        logger.info("🌡️ Temperature System Initialized");
         EventBus.subscribe("DayChangeEvent", event -> handleDayChangeEvent((DayChangeEvent) event));
         EventBus.subscribe("TemperatureEvent", event -> handleTemperatureEvent((TemperatureEvent) event));
     }
@@ -28,7 +28,7 @@ public class TemperatureSystem implements Runnable{
 
     private void handleTemperatureEvent(TemperatureEvent event) {
         int currentTemperature = event.getAmount();
-        logger.info("Day: " + currentDay + " API called temperature set to: {}", currentTemperature);
+        logger.info("🌡️ Day: " + currentDay + " API called temperature set to: {}", currentTemperature);
 
         for (int i = 0; i < gardenGrid.getNumRows(); i++) {
             for (int j = 0; j < gardenGrid.getNumCols(); j++) {
@@ -37,14 +37,14 @@ public class TemperatureSystem implements Runnable{
                     int tempDiff = currentTemperature - plant.getTemperatureRequirement();
                     if (tempDiff > 0) {
                         EventBus.publish("Day: " + currentDay + " TemperatureCoolEvent", new TemperatureCoolEvent(plant.getRow(), plant.getCol(), Math.abs(tempDiff)));
-                        logger.info("Day: " + currentDay + " Temperature system cooled {} at position ({}, {}) by {} degrees F.", plant.getName(), i, j, Math.abs(tempDiff));
+                        logger.info("❄️ Day: " + currentDay + " Temperature system cooled {} at position ({}, {}) by {} degrees F.", plant.getName(), i, j, Math.abs(tempDiff));
                         EventBus.publish("SprinklerEvent", new SprinklerEvent(plant.getRow(), plant.getCol(), tempDiff));
-                        logger.info("Day: " + currentDay + " Sprinklers started at position ({}, {}) to cool down the plant.", i, j);
+                        logger.info("💧 Day: " + currentDay + " Sprinklers started at position ({}, {}) to cool down the plant.", i, j);
                     } else if (tempDiff < 0) {
                         EventBus.publish("TemperatureHeatEvent", new TemperatureHeatEvent(plant.getRow(), plant.getCol(), Math.abs(tempDiff)));
-                        logger.info("Day: " + currentDay + " Temperature system heated {} at position ({}, {}) by {} degrees F.", plant.getName(), i, j, Math.abs(tempDiff));
+                        logger.info("🔥 Day: " + currentDay + " Temperature system heated {} at position ({}, {}) by {} degrees F.", plant.getName(), i, j, Math.abs(tempDiff));
                     } else {
-                        logger.info("Day: " + currentDay + " {} at position ({}, {}) is at optimal temperature.", plant.getName(), i, j);
+                        logger.info("✨ Day: " + currentDay + " {} at position ({}, {}) is at optimal temperature.", plant.getName(), i, j);
                     }
                 }
             }
@@ -56,7 +56,7 @@ public class TemperatureSystem implements Runnable{
 
         while (true) {
             try {
-                logger.info("Day: " + currentDay + " All Levels are optimal");
+                logger.info("🌟 Day: " + currentDay + " All Levels are optimal");
                 Thread.sleep(20000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
