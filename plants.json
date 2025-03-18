@@ -1,7 +1,7 @@
 {
   "trees": [
     {
-      "name": "Oak",
+      "name": "Sal",
       "waterRequirement": 20,
       "growthRate": "Medium",
       "currentImage": "smallTree.png",
@@ -13,7 +13,7 @@
       "healthFull": 150
     },
     {
-      "name": "Maple",
+      "name": "Neem",
       "waterRequirement": 15,
       "growthRate": "Medium",
       "currentImage": "smallTree.png",
@@ -25,7 +25,7 @@
       "healthFull": 150
     },
     {
-      "name": "Pine",
+      "name": "Deodar",
       "waterRequirement": 10,
       "growthRate": "Fast",
       "currentImage": "smallTree.png",
